@@ -1,26 +1,54 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useRoutes } from 'react-router-dom';
 
-function App() {
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+
+import CartList from './pages/CartList';
+import CartPayment from './pages/CartPayment';
+import CartConfirmation from './pages/CartConfirmation';
+
+import AboutUS from './pages/AboutUS';
+import ContactUs from './pages/ContactUs';
+import Footer from './pages/Footer';
+import Navbar from './pages/Navbar';
+
+import AppProvider from './provider/AppProvider';
+
+import GlobalStyle from './styles/global';
+import { AppContainer } from './styles/styles';
+
+export default function App() {
+  console.info(`==> 🌎  You are in the mode ${process.env.NODE_ENV}`);
+  console.info(`==> 🌎  You are in the environment ${process.env.REACT_APP_ENVIRONMENT}`);
+
+  const mainRoutes = {
+    path: '/',
+    element: <Home />
+  };
+  const cartRoutes = {
+    path: 'cart/*',
+    element: <Cart />,
+    children: [
+      { path: '*', element: <CartList /> },
+      { path: 'payment', element: <CartPayment /> },
+      { path: 'confirmation', element: <CartConfirmation /> }
+    ]
+  };
+
+  const routing = useRoutes([mainRoutes, cartRoutes]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <AppContainer>
+      {/* <Navbar/> */}
+      <AppProvider>
+          {routing}
+          {/* <AboutUS />
+          <ContactUs/>  */}
+          {/* <Footer/> */}
+        <GlobalStyle />
+      </AppProvider>
+    </AppContainer>
+  )
 }
-
-export default App;
